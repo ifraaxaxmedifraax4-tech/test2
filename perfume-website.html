@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE — Luxury Perfumes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #08080A;
+    --gold: #C9A84C;
+    --gold-light: #E8CC7A;
+    --cream: #F5F0E8;
+    --burgundy: #4A0E2B;
+    --burgundy-light: #7B1D4A;
+    --white: #FDFCFA;
+    --gray: #888880;
+    --gray-light: #C8C5BF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 60px;
+    background: linear-gradient(to bottom, rgba(8,8,10,0.95) 0%, transparent 100%);
+    transition: background 0.4s;
+  }
+  nav.scrolled { background: rgba(8,8,10,0.97); }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cart {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cream);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .nav-cart:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(74,14,43,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 60%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                var(--black);
+  }
+  canvas#particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 80px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 60px;
+  }
+  .hero-text { }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--gray-light);
+    max-width: 400px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 16px 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-secondary {
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    padding: 16px 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+
+  /* HERO BOTTLE */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 1.4s ease 0.6s forwards;
+  }
+  .bottle-glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+  .bottle-svg { position: relative; z-index: 1; filter: drop-shadow(0 20px 60px rgba(201,168,76,0.3)); }
+
+  /* SCROLL LINE */
+  .scroll-line {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+  .scroll-line span {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .scroll-bar {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollDown 2s ease-in-out infinite;
+  }
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    border-top: 1px solid rgba(201,168,76,0.15);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 18px 0;
+    overflow: hidden;
+    background: rgba(201,168,76,0.03);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .marquee-dot { color: var(--gold); font-size: 0.5rem; }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* COLLECTIONS */
+  .section { padding: 120px 60px; max-width: 1400px; margin: 0 auto; }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+  .section-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(201,168,76,0.4);
+    padding-bottom: 4px;
+    transition: border-color 0.3s;
+    white-space: nowrap;
+  }
+  .section-link:hover { border-color: var(--gold); }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .product-card {
+    position: relative;
+    background: #111014;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+  }
+  .product-card:hover { transform: translateY(-8px); z-index: 2; }
+  .product-card:hover .product-overlay { opacity: 1; }
+  .product-card:hover .product-img-wrap { transform: scale(1.05); }
+  .product-img-wrap {
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #12100E 0%, #1A1419 100%);
+    transition: transform 0.6s ease;
+    overflow: hidden;
+  }
+  .product-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8,8,10,0.9) 0%, transparent 50%);
+    display: flex;
+    align-items: flex-end;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .product-add-btn {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 12px 24px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .product-add-btn:hover { background: var(--gold-light); }
+  .product-info { padding: 24px; }
+  .product-category {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .product-notes {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .product-price {
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  /* FEATURED */
+  .featured-section {
+    padding: 0 0 120px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2px;
+    height: 600px;
+  }
+  .featured-main {
+    position: relative;
+    background: linear-gradient(135deg, #1A0D15 0%, #2A1020 50%, #1A0D15 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .featured-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 70%, rgba(74,14,43,0.4) 0%, transparent 60%);
+  }
+  .featured-main-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 48px;
+    background: linear-gradient(to top, rgba(8,8,10,0.95) 0%, transparent 100%);
+  }
+  .featured-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 14px;
+    margin-bottom: 16px;
+  }
+  .featured-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .featured-desc { font-size: 0.85rem; color: var(--gray-light); line-height: 1.7; }
+  .featured-side { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; }
+  .featured-small {
+    position: relative;
+    background: linear-gradient(135deg, #0E0E16 0%, #14131A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .featured-small::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(201,168,76,0.1) 0%, transparent 60%);
+  }
+  .featured-small-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 32px;
+    background: linear-gradient(to top, rgba(8,8,10,0.9) 0%, transparent 100%);
+  }
+
+  /* STORY */
+  .story-section {
+    padding: 120px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .story-visual {
+    position: relative;
+    height: 560px;
+    background: linear-gradient(135deg, #1A1205 0%, #0E0C08 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .story-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.15) 0%, transparent 70%);
+  }
+  .story-text {}
+  .story-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--cream);
+    margin-bottom: 32px;
+    border-left: 2px solid var(--gold);
+    padding-left: 28px;
+  }
+  .story-body {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--gray-light);
+    margin-bottom: 40px;
+  }
+  .story-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(201,168,76,0.2);
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
+
+  /* FRAGRANCE NOTES */
+  .notes-section {
+    padding: 120px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    margin-top: 64px;
+  }
+  .note-card {
+    background: var(--black);
+    padding: 56px 40px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .note-card:hover { background: #0F0D0B; }
+  .note-icon { font-size: 2.5rem; margin-bottom: 24px; }
+  .note-type {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .note-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .note-desc { font-size: 0.82rem; line-height: 1.8; color: var(--gray); }
+
+  /* NEWSLETTER */
+  .newsletter-section {
+    margin: 0 60px 120px;
+    background: linear-gradient(135deg, #1A0D15 0%, #110920 50%, #0A0E1A 100%);
+    padding: 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .newsletter-section::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .newsletter-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(74,14,43,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .newsletter-content { position: relative; z-index: 1; }
+  .newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .newsletter-sub { font-size: 0.9rem; color: var(--gray-light); margin-bottom: 40px; line-height: 1.7; }
+  .newsletter-form { display: flex; gap: 0; max-width: 480px; margin: 0 auto; }
+  .newsletter-input {
+    flex: 1;
+    background: rgba(253,252,250,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-right: none;
+    color: var(--cream);
+    padding: 16px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .newsletter-input:focus { border-color: var(--gold); }
+  .newsletter-input::placeholder { color: var(--gray); }
+  .newsletter-btn {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 16px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+  .newsletter-btn:hover { background: var(--gold-light); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 60px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    max-width: 1400px;
+    margin: 0 auto 60px;
+  }
+  .footer-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+  }
+  .footer-tagline { font-size: 0.85rem; color: var(--gray); line-height: 1.8; max-width: 280px; }
+  .footer-col-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+  .footer-bottom {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid rgba(201,168,76,0.08);
+  }
+  .footer-copy { font-size: 0.75rem; color: var(--gray); }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-socials a { color: var(--gray); font-size: 0.75rem; text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+  .footer-socials a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero-content { grid-template-columns: 1fr; padding: 0 24px; gap: 40px; }
+    .hero-visual { order: -1; }
+    .hero-title { font-size: 2.8rem; }
+    .section { padding: 80px 24px; }
+    .featured-section { padding: 0 24px 80px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .featured-grid { grid-template-columns: 1fr; height: auto; }
+    .story-section { grid-template-columns: 1fr; gap: 48px; padding: 80px 24px; }
+    .notes-grid { grid-template-columns: 1fr; }
+    .newsletter-section { margin: 0 24px 80px; padding: 48px 24px; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-input { border-right: 1px solid rgba(201,168,76,0.3); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    footer { padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">LUMIÈRE</a>
+  <ul class="nav-links">
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#notes">Notes</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-cart">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    Cart (0)
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-text">
+      <p class="hero-eyebrow">New Collection — 2025</p>
+      <h1 class="hero-title">Where Scent Becomes <em>Memory</em></h1>
+      <p class="hero-desc">Handcrafted fragrances born from the rarest ingredients — each bottle a journey through jasmine fields, oud forests, and midnight roses.</p>
+      <div class="hero-actions">
+        <a href="#collections" class="btn-primary">Explore Collection</a>
+        <a href="#story" class="btn-secondary">Our Craft</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="bottle-glow"></div>
+      <svg class="bottle-svg" width="220" height="360" viewBox="0 0 220 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bottle cap -->
+        <rect x="82" y="20" width="56" height="16" rx="3" fill="#C9A84C"/>
+        <rect x="88" y="10" width="44" height="14" rx="2" fill="#E8CC7A"/>
+        <rect x="94" y="4" width="32" height="10" rx="2" fill="#C9A84C"/>
+        <!-- Neck -->
+        <rect x="88" y="36" width="44" height="8" rx="2" fill="#C9A84C"/>
+        <path d="M88 44 L72 80 H148 L132 44 Z" fill="url(#neckGrad)"/>
+        <!-- Body -->
+        <path d="M72 80 Q60 90 58 110 L54 280 Q54 300 72 310 L148 310 Q166 300 166 280 L162 110 Q160 90 148 80 Z" fill="url(#bodyGrad)"/>
+        <!-- Label area -->
+        <rect x="68" y="150" width="84" height="110" rx="4" fill="rgba(8,8,10,0.6)"/>
+        <text x="110" y="182" text-anchor="middle" fill="#C9A84C" font-family="'Playfair Display', serif" font-size="10" letter-spacing="4" font-style="italic">LUMIÈRE</text>
+        <line x1="78" y1="192" x2="142" y2="192" stroke="#C9A84C" stroke-width="0.5" opacity="0.6"/>
+        <text x="110" y="210" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="14" font-weight="300" letter-spacing="2">Nuit d'Or</text>
+        <text x="110" y="228" text-anchor="middle" fill="#888880" font-family="'Inter', sans-serif" font-size="7" letter-spacing="3">EAU DE PARFUM</text>
+        <line x1="78" y1="238" x2="142" y2="238" stroke="#C9A84C" stroke-width="0.5" opacity="0.6"/>
+        <text x="110" y="252" text-anchor="middle" fill="#888880" font-family="serif" font-size="7" letter-spacing="2">75ml · 2.5 fl.oz</text>
+        <!-- Base -->
+        <path d="M54 290 L54 300 Q54 316 72 316 L148 316 Q166 316 166 300 L166 290 Z" fill="url(#baseGrad)"/>
+        <!-- Highlight -->
+        <path d="M72 90 Q66 100 64 120 L62 200" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- Shimmer -->
+        <path d="M72 90 Q66 100 64 120 L62 200" stroke="rgba(201,168,76,0.1)" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <defs>
+          <linearGradient id="bodyGrad" x1="54" y1="80" x2="166" y2="310" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2A1F0E"/>
+            <stop offset="40%" stop-color="#3D2B10"/>
+            <stop offset="70%" stop-color="#2A1F0E"/>
+            <stop offset="100%" stop-color="#1A1208"/>
+          </linearGradient>
+          <linearGradient id="neckGrad" x1="88" y1="44" x2="132" y2="80" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#C9A84C"/>
+            <stop offset="100%" stop-color="#3D2B10"/>
+          </linearGradient>
+          <linearGradient id="baseGrad" x1="54" y1="290" x2="166" y2="316" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2A1F0E"/>
+            <stop offset="100%" stop-color="#1A1208"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div class="scroll-line">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Oud & Amber <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Rose de Minuit <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Jasmine Absolue <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Sandalwood Elixir <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Musk & Vetiver <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Bergamot Bliss <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Cedar & Leather <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Floral Silk <span class="marquee-dot">◆</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Oud & Amber <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Rose de Minuit <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Jasmine Absolue <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Sandalwood Elixir <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Musk & Vetiver <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Bergamot Bliss <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Cedar & Leather <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Floral Silk <span class="marquee-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<div id="collections">
+  <div class="section">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">Our Collection</div>
+        <h2 class="section-title">Signature Fragrances</h2>
+      </div>
+      <a href="#" class="section-link">View All →</a>
+    </div>
+    <div class="products-grid reveal">
+      <!-- Product 1 -->
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <svg width="80" height="180" viewBox="0 0 80 180" fill="none">
+            <rect x="32" y="2" width="16" height="8" rx="2" fill="#C9A84C"/>
+            <rect x="28" y="10" width="24" height="6" rx="1" fill="#C9A84C"/>
+            <path d="M28 16 L18 36 H62 L52 16Z" fill="url(#b1n)"/>
+            <path d="M18 36 Q12 44 10 56 L8 148 Q8 160 20 162 L60 162 Q72 160 72 148 L70 56 Q68 44 62 36Z" fill="url(#b1b)"/>
+            <rect x="14" y="90" width="52" height="52" rx="2" fill="rgba(0,0,0,0.4)"/>
+            <text x="40" y="112" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="3">LUMIÈRE</text>
+            <text x="40" y="126" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="8">Nuit d'Or</text>
+            <text x="40" y="136" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDP 75ML</text>
+            <defs>
+              <linearGradient id="b1b" x1="8" y1="36" x2="72" y2="162" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4A2D10"/>
+                <stop offset="50%" stop-color="#3D2408"/>
+                <stop offset="100%" stop-color="#2A1A06"/>
+              </linearGradient>
+              <linearGradient id="b1n" x1="28" y1="16" x2="52" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#E8CC7A"/>
+                <stop offset="100%" stop-color="#3D2408"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="product-overlay"><button class="product-add-btn">Add to Cart</button></div>
+        <div class="product-info">
+          <div class="product-category">Woody Oriental</div>
+          <div class="product-name">Nuit d'Or</div>
+          <div class="product-notes">Oud · Amber · Vanilla</div>
+          <div class="product-price">$185</div>
+        </div>
+      </div>
+      <!-- Product 2 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(135deg, #0D0A14 0%, #1A1428 100%);">
+          <svg width="80" height="180" viewBox="0 0 80 180" fill="none">
+            <rect x="30" y="2" width="20" height="10" rx="3" fill="#9B6B9B"/>
+            <rect x="26" y="12" width="28" height="6" rx="2" fill="#7B4B8B"/>
+            <path d="M26 18 L16 38 H64 L54 18Z" fill="url(#b2n)"/>
+            <path d="M16 38 Q10 46 8 58 L6 148 Q6 162 18 164 L62 164 Q74 162 74 148 L72 58 Q70 46 64 38Z" fill="url(#b2b)"/>
+            <rect x="12" y="88" width="56" height="56" rx="2" fill="rgba(0,0,0,0.5)"/>
+            <text x="40" y="110" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="3">LUMIÈRE</text>
+            <text x="40" y="124" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="7.5">Minuit Violet</text>
+            <text x="40" y="136" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDP 50ML</text>
+            <defs>
+              <linearGradient id="b2b" x1="6" y1="38" x2="74" y2="164" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2A1840"/>
+                <stop offset="50%" stop-color="#1E1030"/>
+                <stop offset="100%" stop-color="#140A22"/>
+              </linearGradient>
+              <linearGradient id="b2n" x1="26" y1="18" x2="54" y2="38" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#9B6B9B"/>
+                <stop offset="100%" stop-color="#2A1840"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="product-overlay"><button class="product-add-btn">Add to Cart</button></div>
+        <div class="product-info">
+          <div class="product-category">Floral Chypre</div>
+          <div class="product-name">Minuit Violet</div>
+          <div class="product-notes">Iris · Violet · Musk</div>
+          <div class="product-price">$160</div>
+        </div>
+      </div>
+      <!-- Product 3 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(135deg, #0C100A 0%, #141A10 100%);">
+          <svg width="80" height="180" viewBox="0 0 80 180" fill="none">
+            <rect x="32" y="2" width="16" height="8" rx="2" fill="#5A8A40"/>
+            <rect x="28" y="10" width="24" height="6" rx="2" fill="#4A7A30"/>
+            <path d="M28 16 L18 36 H62 L52 16Z" fill="url(#b3n)"/>
+            <path d="M18 36 Q12 44 10 56 L8 148 Q8 160 20 162 L60 162 Q72 160 72 148 L70 56 Q68 44 62 36Z" fill="url(#b3b)"/>
+            <rect x="14" y="90" width="52" height="52" rx="2" fill="rgba(0,0,0,0.5)"/>
+            <text x="40" y="112" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="3">LUMIÈRE</text>
+            <text x="40" y="126" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="7">Forêt Éternelle</text>
+            <text x="40" y="136" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDP 75ML</text>
+            <defs>
+              <linearGradient id="b3b" x1="8" y1="36" x2="72" y2="162" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1A2810"/>
+                <stop offset="50%" stop-color="#141E0C"/>
+                <stop offset="100%" stop-color="#0C1408"/>
+              </linearGradient>
+              <linearGradient id="b3n" x1="28" y1="16" x2="52" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#5A8A40"/>
+                <stop offset="100%" stop-color="#1A2810"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="product-overlay"><button class="product-add-btn">Add to Cart</button></div>
+        <div class="product-info">
+          <div class="product-category">Aromatic Fougère</div>
+          <div class="product-name">Forêt Éternelle</div>
+          <div class="product-notes">Cedar · Pine · Vetiver</div>
+          <div class="product-price">$145</div>
+        </div>
+      </div>
+      <!-- Product 4 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(135deg, #140808 0%, #200C0C 100%);">
+          <svg width="80" height="180" viewBox="0 0 80 180" fill="none">
+            <rect x="32" y="2" width="16" height="8" rx="2" fill="#C94A4A"/>
+            <rect x="28" y="10" width="24" height="6" rx="2" fill="#A83A3A"/>
+            <path d="M28 16 L18 36 H62 L52 16Z" fill="url(#b4n)"/>
+            <path d="M18 36 Q12 44 10 56 L8 148 Q8 160 20 162 L60 162 Q72 160 72 148 L70 56 Q68 44 62 36Z" fill="url(#b4b)"/>
+            <rect x="14" y="90" width="52" height="52" rx="2" fill="rgba(0,0,0,0.5)"/>
+            <text x="40" y="112" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="3">LUMIÈRE</text>
+            <text x="40" y="126" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="8">Rose Sang</text>
+            <text x="40" y="136" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDP 50ML</text>
+            <defs>
+              <linearGradient id="b4b" x1="8" y1="36" x2="72" y2="162" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#3A1010"/>
+                <stop offset="50%" stop-color="#2A0C0C"/>
+                <stop offset="100%" stop-color="#1E0808"/>
+              </linearGradient>
+              <linearGradient id="b4n" x1="28" y1="16" x2="52" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#C94A4A"/>
+                <stop offset="100%" stop-color="#3A1010"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="product-overlay"><button class="product-add-btn">Add to Cart</button></div>
+        <div class="product-info">
+          <div class="product-category">Floral Oriental</div>
+          <div class="product-name">Rose Sang</div>
+          <div class="product-notes">Rose · Saffron · Patchouli</div>
+          <div class="product-price">$175</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<div id="featured">
+  <div class="featured-section">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">Editor's Pick</div>
+        <h2 class="section-title">Featured This Season</h2>
+      </div>
+      <a href="#" class="section-link">View All →</a>
+    </div>
+    <div class="featured-grid reveal">
+      <div class="featured-main">
+        <svg width="200" height="400" viewBox="0 0 200 400" fill="none" style="position:relative;z-index:1;">
+          <rect x="80" y="10" width="40" height="20" rx="4" fill="#C9A84C"/>
+          <rect x="72" y="30" width="56" height="12" rx="3" fill="#E8CC7A"/>
+          <path d="M72 42 L50 90 H150 L128 42Z" fill="url(#fmn)"/>
+          <path d="M50 90 Q36 108 34 130 L30 330 Q30 358 50 362 L150 362 Q170 358 170 330 L166 130 Q164 108 150 90Z" fill="url(#fmb)"/>
+          <rect x="40" y="196" width="120" height="110" rx="4" fill="rgba(0,0,0,0.5)"/>
+          <text x="100" y="224" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="11" letter-spacing="4">LUMIÈRE</text>
+          <line x1="52" y1="234" x2="148" y2="234" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+          <text x="100" y="256" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="18" font-weight="300" letter-spacing="2">L'Absolu</text>
+          <text x="100" y="276" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="8" letter-spacing="3">EAU DE PARFUM INTENSE</text>
+          <line x1="52" y1="288" x2="148" y2="288" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+          <text x="100" y="302" text-anchor="middle" fill="#888" font-family="serif" font-size="8" letter-spacing="2">100ml · 3.4 fl.oz</text>
+          <defs>
+            <linearGradient id="fmb" x1="30" y1="90" x2="170" y2="362" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#3A2800"/>
+              <stop offset="40%" stop-color="#5A4010"/>
+              <stop offset="70%" stop-color="#3A2800"/>
+              <stop offset="100%" stop-color="#201800"/>
+            </linearGradient>
+            <linearGradient id="fmn" x1="72" y1="42" x2="128" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#E8CC7A"/>
+              <stop offset="100%" stop-color="#3A2800"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="featured-main-content">
+          <span class="featured-tag">Bestseller</span>
+          <h3 class="featured-name">L'Absolu</h3>
+          <p class="featured-desc">The ultimate expression of luxury — golden oud aged 12 years, wrapped in Grasse rose and warm amber.</p>
+        </div>
+      </div>
+      <div class="featured-side">
+        <div class="featured-small" style="background: linear-gradient(135deg, #0A1220 0%, #101A2E 100%);">
+          <svg width="80" height="160" viewBox="0 0 80 160" fill="none">
+            <rect x="30" y="4" width="20" height="8" rx="2" fill="#4A7AAA"/>
+            <rect x="26" y="12" width="28" height="5" rx="2" fill="#3A6A9A"/>
+            <path d="M26 17 L16 36 H64 L54 17Z" fill="url(#fs1n)"/>
+            <path d="M16 36 Q10 44 8 54 L6 132 Q6 144 18 146 L62 146 Q74 144 74 132 L72 54 Q70 44 64 36Z" fill="url(#fs1b)"/>
+            <rect x="12" y="72" width="56" height="52" rx="2" fill="rgba(0,0,0,0.5)"/>
+            <text x="40" y="94" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="2">LUMIÈRE</text>
+            <text x="40" y="108" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="7">Mer d'Azur</text>
+            <text x="40" y="118" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDT 50ML</text>
+            <defs>
+              <linearGradient id="fs1b" x1="6" y1="36" x2="74" y2="146" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1A2A40"/>
+                <stop offset="100%" stop-color="#0C1420"/>
+              </linearGradient>
+              <linearGradient id="fs1n" x1="26" y1="17" x2="54" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4A7AAA"/>
+                <stop offset="100%" stop-color="#1A2A40"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="featured-small-content">
+            <div class="product-category">Marine Fresh</div>
+            <div class="product-name" style="font-family:'Playfair Display',serif;font-size:1.1rem;">Mer d'Azur</div>
+            <div style="font-size:0.8rem;color:var(--gold);margin-top:8px;">$135</div>
+          </div>
+        </div>
+        <div class="featured-small" style="background: linear-gradient(135deg, #180A0A 0%, #241010 100%);">
+          <svg width="80" height="160" viewBox="0 0 80 160" fill="none">
+            <rect x="30" y="4" width="20" height="8" rx="2" fill="#C9A84C"/>
+            <rect x="26" y="12" width="28" height="5" rx="2" fill="#A88A3A"/>
+            <path d="M26 17 L16 36 H64 L54 17Z" fill="url(#fs2n)"/>
+            <path d="M16 36 Q10 44 8 54 L6 132 Q6 144 18 146 L62 146 Q74 144 74 132 L72 54 Q70 44 64 36Z" fill="url(#fs2b)"/>
+            <rect x="12" y="72" width="56" height="52" rx="2" fill="rgba(0,0,0,0.5)"/>
+            <text x="40" y="94" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="5" letter-spacing="2">LUMIÈRE</text>
+            <text x="40" y="108" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="7">Cuir Doré</text>
+            <text x="40" y="118" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="4" letter-spacing="2">EDP 75ML</text>
+            <defs>
+              <linearGradient id="fs2b" x1="6" y1="36" x2="74" y2="146" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#3A1C08"/>
+                <stop offset="100%" stop-color="#201008"/>
+              </linearGradient>
+              <linearGradient id="fs2n" x1="26" y1="17" x2="54" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#C9A84C"/>
+                <stop offset="100%" stop-color="#3A1C08"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="featured-small-content">
+            <div class="product-category">Leather & Spice</div>
+            <div class="product-name" style="font-family:'Playfair Display',serif;font-size:1.1rem;">Cuir Doré</div>
+            <div style="font-size:0.8rem;color:var(--gold);margin-top:8px;">$165</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY -->
+<div id="story">
+  <div class="story-section">
+    <div class="story-visual reveal">
+      <svg width="100%" height="100%" viewBox="0 0 500 560" fill="none" style="position:relative;z-index:1;">
+        <!-- Background circles -->
+        <circle cx="250" cy="280" r="200" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+        <circle cx="250" cy="280" r="150" fill="none" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>
+        <!-- Large decorative bottle -->
+        <rect x="208" y="60" width="84" height="28" rx="6" fill="#C9A84C"/>
+        <rect x="196" y="88" width="108" height="18" rx="4" fill="#E8CC7A"/>
+        <path d="M196 106 L160 170 H340 L304 106Z" fill="url(#sbn)"/>
+        <path d="M160 170 Q140 196 136 224 L128 400 Q128 436 160 444 L340 444 Q372 436 372 400 L364 224 Q360 196 340 170Z" fill="url(#sbb)"/>
+        <rect x="144" y="264" width="212" height="130" rx="4" fill="rgba(0,0,0,0.55)"/>
+        <text x="250" y="298" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="14" letter-spacing="5">LUMIÈRE</text>
+        <line x1="158" y1="310" x2="342" y2="310" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+        <text x="250" y="334" text-anchor="middle" fill="#F5F0E8" font-family="serif" font-size="22" font-weight="300" letter-spacing="2">Essence</text>
+        <text x="250" y="356" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9" letter-spacing="4">EAU DE PARFUM · 100ML</text>
+        <line x1="158" y1="368" x2="342" y2="368" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+        <text x="250" y="384" text-anchor="middle" fill="#888" font-family="serif" font-size="9" letter-spacing="2">Paris · Est. 2010</text>
+        <!-- Shadow -->
+        <ellipse cx="250" cy="490" rx="120" ry="20" fill="rgba(201,168,76,0.08)"/>
+        <defs>
+          <linearGradient id="sbb" x1="128" y1="170" x2="372" y2="444" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4A3010"/>
+            <stop offset="40%" stop-color="#6A4A18"/>
+            <stop offset="70%" stop-color="#4A3010"/>
+            <stop offset="100%" stop-color="#2A1C08"/>
+          </linearGradient>
+          <linearGradient id="sbn" x1="196" y1="106" x2="304" y2="170" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#E8CC7A"/>
+            <stop offset="100%" stop-color="#4A3010"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="story-text reveal">
+      <div class="section-label">Our Heritage</div>
+      <blockquote class="story-quote">"A fragrance is an invisible garment — the most intimate thing you can wear."</blockquote>
+      <p class="story-body">Founded in Paris in 2010, Lumière was born from a single obsession: to create scents that outlive the moment. We source only the world's rarest materials — Bulgarian rose absolute, Madagascan vanilla, and aged Hindi oud — and entrust them to master perfumers with decades of craft.<br><br>Every bottle is a story waiting to become yours.</p>
+      <a href="#" class="btn-secondary">Discover Our Story</a>
+      <div class="story-stats">
+        <div>
+          <div class="stat-num">15+</div>
+          <div class="stat-label">Years of Craft</div>
+        </div>
+        <div>
+          <div class="stat-num">42</div>
+          <div class="stat-label">Unique Scents</div>
+        </div>
+        <div>
+          <div class="stat-num">80+</div>
+          <div class="stat-label">Countries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FRAGRANCE NOTES -->
+<div id="notes">
+  <div class="notes-section">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">The Anatomy of Scent</div>
+        <h2 class="section-title">Fragrance Notes</h2>
+      </div>
+    </div>
+    <div class="notes-grid reveal">
+      <div class="note-card">
+        <div class="note-icon">🌸</div>
+        <div class="note-type">Top Notes</div>
+        <h3 class="note-name">The First Impression</h3>
+        <p class="note-desc">Bergamot, pink pepper, and citrus — the vivid opening that greets the world. Bold, bright, and fleeting. These notes evaporate within 15 minutes, making way for the heart.</p>
+      </div>
+      <div class="note-card">
+        <div class="note-icon">🌹</div>
+        <div class="note-type">Heart Notes</div>
+        <h3 class="note-name">The Soul</h3>
+        <p class="note-desc">Rose, jasmine, and spice — the true character of the fragrance. Emerging after 20 minutes and lasting for hours, the heart is where a perfume reveals itself completely.</p>
+      </div>
+      <div class="note-card">
+        <div class="note-icon">🪵</div>
+        <div class="note-type">Base Notes</div>
+        <h3 class="note-name">The Memory</h3>
+        <p class="note-desc">Oud, sandalwood, and musks — the lasting impression. Rich, deep, and anchoring, base notes linger on skin for hours after the top and heart have faded into their embrace.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<div id="contact">
+  <div class="newsletter-section reveal">
+    <div class="newsletter-content">
+      <div class="section-label">Stay Close</div>
+      <h2 class="newsletter-title">First to Know. First to Feel.</h2>
+      <p class="newsletter-sub">Join the Lumière circle and receive early access to new collections,<br>exclusive events, and the art of perfumery.</p>
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="Your email address">
+        <button class="newsletter-btn">Join Us</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">LUMIÈRE</div>
+      <p class="footer-tagline">Luxury fragrances handcrafted from the world's rarest ingredients. Since 2010, Paris.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Collections</div>
+      <ul class="footer-links">
+        <li><a href="#">Woody Oriental</a></li>
+        <li><a href="#">Floral Chypre</a></li>
+        <li><a href="#">Aromatic Fresh</a></li>
+        <li><a href="#">Leather & Spice</a></li>
+        <li><a href="#">Limited Editions</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Maison</div>
+      <ul class="footer-links">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Perfumers</a></li>
+        <li><a href="#">Ingredients</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Support</div>
+      <ul class="footer-links">
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Find a Store</a></li>
+        <li><a href="#">Gift Cards</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Lumière Parfums. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">Pinterest</a>
+      <a href="#">TikTok</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Particle system
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.size = Math.random() * 2.5 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 0.4;
+      this.speedY = -Math.random() * 0.6 - 0.2;
+      this.opacity = Math.random() * 0.5 + 0.1;
+      this.life = 0;
+      this.maxLife = Math.random() * 200 + 100;
+      this.gold = Math.random() > 0.6;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.life++;
+      const ratio = this.life / this.maxLife;
+      this.alpha = ratio < 0.2 ? ratio/0.2 : ratio > 0.8 ? (1-ratio)/0.2 : 1;
+      if (this.life >= this.maxLife || this.y < -20) this.reset();
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity * this.alpha;
+      ctx.fillStyle = this.gold ? '#C9A84C' : '#F5F0E8';
+      ctx.shadowColor = this.gold ? '#C9A84C' : '#F5F0E8';
+      ctx.shadowBlur = 4;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < 80; i++) {
+    const p = new Particle();
+    p.life = Math.random() * p.maxLife; // stagger start
+    particles.push(p);
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+</body>
+</html>
